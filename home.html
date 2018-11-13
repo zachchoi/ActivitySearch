@@ -16,71 +16,69 @@
         <p class="lead">[Description]</p>
       </div>
     </div>
-    <div class="container">
+    <div class="mx-5">
+      <form class="justify-content-center">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search Activity">
+        </div>
+      </form>
       <div>
-        <form class="justify-content-center">
-          <div class="form-group mx-5">
-            <input type="text" class="form-control" placeholder="Search Activity">
+        <div class="btn-group">
+          <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Cost
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="#">Free</a>
+            <a class="dropdown-item" href="#">Cheap</a>
+            <a class="dropdown-item" href="#">Expensive</a>
           </div>
-        </form>
-        <div class="mx-5">
-          <div class="btn-group">
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Expense
-            </button>
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="#">Free</a>
-              <a class="dropdown-item" href="#">Cheap</a>
-              <a class="dropdown-item" href="#">Expensive</a>
-            </div>
+        </div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Location
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="#">Central</a>
+            <a class="dropdown-item" href="#">North</a>
           </div>
-          <div class="btn-group">
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Location
-            </button>
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="#">Central</a>
-              <a class="dropdown-item" href="#">North</a>
-            </div>
-          </div>
-          <button type="button" class="btn btn-secondary float-right" data-toggle="modal" data-target="#create-activity">Create Activity</button>
-          <div class="modal fade" id="create-activity" tabindex="-1" role="dialog">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Create Activity</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <form>
-                    <div class="form-group">
-                      <label for="create-activity-title">Activity Title</label>
-                      <input type="email" class="form-control" id="create-activity-title" placeholder="Enter activity">
-                      <small class="form-text text-muted">[Example activity]</small>
-                    </div>
-                    <div class="form-group">
-                      <label for="create-activity-expense">Expense select</label>
-                      <select class="form-control" id="create-activity-expense">
-                        <option>Free</option>
-                        <option>Cheap</option>
-                        <option>Expensive</option>
-                      </select>
-                    </div>
-                    <div class="form-group">
-                      <label for="create-activity-location">Location select</label>
-                      <select class="form-control" id="create-activity-location">
-                        <option>Central</option>
-                        <option>North</option>
-                      </select>
-                    </div>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-secondary">Save Activity</button>
-                </div>
+        </div>
+        <button type="button" class="btn btn-secondary float-right" data-toggle="modal" data-target="#new-activity">New Activity</button>
+        <div class="modal fade" id="new-activity" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Create Activity</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="form-group">
+                    <label for="new-activity-title">Activity Title</label>
+                    <input type="email" class="form-control" id="new-activity-title" placeholder="Enter activity">
+                    <small class="form-text text-muted">[Example activity]</small>
+                  </div>
+                  <div class="form-group">
+                    <label for="new-activity-expense">Expense select</label>
+                    <select class="form-control" id="new-activity-expense">
+                      <option>Free</option>
+                      <option>Cheap</option>
+                      <option>Expensive</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="new-activity-location">Location select</label>
+                    <select class="form-control" id="new-activity-location">
+                      <option>Central</option>
+                      <option>North</option>
+                    </select>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary">Save Activity</button>
               </div>
             </div>
           </div>
