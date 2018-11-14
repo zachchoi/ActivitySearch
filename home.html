@@ -16,96 +16,98 @@
         <p class="lead">[Description]</p>
       </div>
     </div>
-    <div class="mx-5">
-      <form class="justify-content-center">
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Search Activity">
-        </div>
-      </form>
-      <div>
-        <div class="btn-group">
-          <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Cost
-          </button>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="#">Free</a>
-            <a class="dropdown-item" href="#">Cheap</a>
-            <a class="dropdown-item" href="#">Expensive</a>
-          </div>
-        </div>
-        <div class="btn-group">
-          <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Location
-          </button>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="#">Central</a>
-            <a class="dropdown-item" href="#">North</a>
-          </div>
-        </div>
-        <button type="button" class="btn btn-secondary float-right" data-toggle="modal" data-target="#new-activity">New Activity</button>
-        <div class="modal fade" id="new-activity" tabindex="-1" role="dialog">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">Create Activity</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <form>
-                  <div class="form-group">
-                    <label for="new-activity-title">Activity Title</label>
-                    <input type="text" class="form-control" id="new-activity-title" placeholder="Enter activity">
-                    <small class="form-text text-muted">[Example activity]</small>
-                  </div>
-                  <div class="form-group">
-                    <label for="new-activity-cost">Cost select</label>
-                    <select class="form-control" id="new-activity-cost">
-                      <option>Free</option>
-                      <option>Cheap</option>
-                      <option>Expensive</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label for="new-activity-location">Location select</label>
-                    <select class="form-control" id="new-activity-location">
-                      <option>Central</option>
-                      <option>North</option>
-                    </select>
-                  </div>
-                </form>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-secondary">Save Activity</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
     <div ng-controller="searchResult">
-      <div class="card-columns mx-5 my-3">
-        <div ng-repeat="result in results track by $index" class="card">
-          <div class="card-header white-bg">
-            <a href="#" class="black-font">+</a>
+      <div class="mx-5">
+        <form class="justify-content-center">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search Activity">
           </div>
-          <div class="card-body grey-bg">
-            <p class="lead">[Result]</p>
-            <p>[Result 2]</p>
+        </form>
+        <div>
+          <div class="btn-group">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Cost
+            </button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="javascript:void(0)">Free</a>
+              <a class="dropdown-item" href="javascript:void(0)">Cheap</a>
+              <a class="dropdown-item" href="javascript:void(0)"">Expensive</a>
+            </div>
           </div>
-          <div class="card-footer container white-bg">
-            <div class="row">
-              <a href="#" class="black-font">↑</a>
-              <p>[Vote count]</p>
-              <a href="#" class="black-font">↓</a>
+          <div class="btn-group">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Location
+            </button>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="javascript:void(0)">Central</a>
+              <a class="dropdown-item" href="javascript:void(0)">North</a>
+            </div>
+          </div>
+          <button type="button" class="btn btn-secondary float-right" data-toggle="modal" data-target="#new-activity">New Activity</button>
+          <div class="modal fade" id="new-activity" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Create Activity</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form>
+                    <div class="form-group">
+                      <label for="new-activity-title">Activity Title</label>
+                      <input ng-model="newActivityTitle" type="text" class="form-control" id="new-activity-title" placeholder="Enter activity">
+                      <small class="form-text text-muted">[Example activity]</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="new-activity-cost">Cost select</label>
+                      <select ng-model="newActivityCost" class="form-control" id="new-activity-cost">
+                        <option>Free</option>
+                        <option>Cheap</option>
+                        <option>Expensive</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="new-activity-location">Location select</label>
+                      <select ng-model="newActivityLocation" class="form-control" id="new-activity-location">
+                        <option>Central</option>
+                        <option>North</option>
+                      </select>
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button ng-disabled="newActivityTitle === undefined || newActivityCost === undefined || newActivityLocation === undefined" ng-click="newActivity()" type="button" class="btn btn-secondary">Save Activity</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card-columns mx-5 my-3">
+          <div ng-repeat="result in results track by $index" class="card">
+            <div class="card-header white-bg">
+              <a href="javascript:void(0)" class="black-font">+</a>
+            </div>
+            <div class="card-body grey-bg">
+              <p class="h2">{{result.title}}</p>
+              <p><b>Cost:</b> {{result.cost}}</p>
+              <p><b>Location:</b> {{result.location}}</p>
+            </div>
+            <div class="card-footer container white-bg">
+              <div class="row">
+                <a ng-click="upVote($index)" href="javascript:void(0)" class="black-font">↑</a>
+                <p>{{result.vote}}</p>
+                <a ng-click="downVote($index)" href="javascript:void(0)" class="black-font">↓</a>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
