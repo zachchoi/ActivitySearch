@@ -3,6 +3,7 @@ var app = angular.module('ActivitySearch', []);
 app.controller('searchResult',[ '$scope', '$http', function($scope, $http) {
 	var searchResult = $scope;
 	searchResult.results = [];
+	searchResult.loginStatus = false;
 
 	searchResult.newActivity = function() {
 		searchResult.results.push({

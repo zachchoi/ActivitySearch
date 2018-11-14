@@ -13,6 +13,10 @@
 	text-align: right;
 }
 
+.card-body {
+	height: 200px;
+}
+
 .grey-bg {
 	background-color: #e9ecef;
 }
