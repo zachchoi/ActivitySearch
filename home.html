@@ -21,17 +21,68 @@
       </button>
       <div class="collapse navbar-collapse" id="na">
         <ul class="navbar-nav">
-          <li ng-show="!loginStatus" class="nav-item">
-            <a class="nav-link" href="javascript:void(0)">Log in</a>
-          </li>
-          <li ng-show="loginStatus" class="nav-item">
-            <a class="nav-link" href="javascript:void(0)">Bookmarks</a>
-          </li>
-          <li ng-show="loginStatus" class="nav-item">
-            <a class="nav-link" href="javascript:void(0)">Log out</a>
-          </li> 
+          <li ng-show="!loginStatus" class="nav-item"><a class="nav-link" href="javascript:void(0)" data-toggle="modal" data-target="#login">Log in</a></li>
+          <li ng-show="!loginStatus" class="nav-item"><a class="nav-link" href="javascript:void(0)" data-toggle="modal" data-target="#register">Register</a></li>
+          <li ng-show="loginStatus" class="nav-item"><a class="nav-link" href="javascript:void(0)">Bookmarks</a></li>
+          <li ng-show="loginStatus" class="nav-item"><a class="nav-link" href="javascript:void(0)">Log out</a></li> 
         </ul>
-      </div> 
+      </div>
+      <div class="modal fade" id="login" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Log in</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="login-username">Username</label>
+                  <input ng-model="loginUsername" type="text" class="form-control" id="login-username" placeholder="Username">
+                </div>
+                <div class="form-group">
+                  <label for="login-password">Password</label>
+                  <input ng-model="loginPassword" type="text" class="form-control" id="login-password" placeholder="Password">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button ng-disabled="loginUsername === undefined || loginPassword === undefined" ng-click="" type="button" class="btn btn-secondary">Log in</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="register" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Register</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="register-username">Username</label>
+                  <input ng-model="registerUsername" type="text" class="form-control" id="register-username" placeholder="Username">
+                </div>
+                <div class="form-group">
+                  <label for="register-password">Password</label>
+                  <input ng-model="registerPassword" type="text" class="form-control" id="register-password" placeholder="Password">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button ng-disabled="registerUsername === undefined || registerPassword === undefined" ng-click="" type="button" class="btn btn-secondary">Register</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </nav>
     <!-- Jumbotron -->
     <div class="jumbotron jumbotron-fluid">
@@ -67,7 +118,6 @@
               <a class="dropdown-item" href="javascript:void(0)">North</a>
             </div>
           </div>
-          <!-- Modal for new activity  -->
           <button type="button" class="btn btn-secondary float-right" data-toggle="modal" data-target="#new-activity">New Activity</button>
           <div class="modal fade" id="new-activity" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
