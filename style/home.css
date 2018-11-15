@@ -17,6 +17,10 @@
 	height: 200px;
 }
 
+.card-body-title {
+	height: 40px;
+}
+
 .grey-bg {
 	background-color: #e9ecef;
 }

@@ -15,7 +15,7 @@
   <body ng-app="ActivitySearch">
     <!-- Navigation bar -->
     <nav class="navbar bg-dark navbar-dark">
-      <a class="navbar-brand" href="#">Ann Arbor Activity</a>
+      <a class="navbar-brand" href="#">EECS493</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#na">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -23,7 +23,6 @@
         <ul class="navbar-nav">
           <li ng-show="!loginStatus" class="nav-item"><a class="nav-link" href="javascript:void(0)" data-toggle="modal" data-target="#login">Log in</a></li>
           <li ng-show="!loginStatus" class="nav-item"><a class="nav-link" href="javascript:void(0)" data-toggle="modal" data-target="#register">Register</a></li>
-          <li ng-show="loginStatus" class="nav-item"><a class="nav-link" href="javascript:void(0)">Bookmarks</a></li>
           <li ng-show="loginStatus" class="nav-item"><a class="nav-link" href="javascript:void(0)">Log out</a></li> 
         </ul>
       </div>
@@ -32,8 +31,8 @@
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">Log in</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+              <button type="button" class="close" data-dismiss="modal">
+                <span>&times;</span>
               </button>
             </div>
             <div class="modal-body">
@@ -60,8 +59,8 @@
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">Register</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+              <button type="button" class="close" data-dismiss="modal">
+                <span>&times;</span>
               </button>
             </div>
             <div class="modal-body">
@@ -100,7 +99,7 @@
         </form>
         <div>
           <div class="btn-group">
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
               Cost
             </button>
             <div class="dropdown-menu">
@@ -110,7 +109,7 @@
             </div>
           </div>
           <div class="btn-group">
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
               Location
             </button>
             <div class="dropdown-menu">
@@ -118,14 +117,18 @@
               <a class="dropdown-item" href="javascript:void(0)">North</a>
             </div>
           </div>
+          <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-secondary active"><input type="radio" name="options" checked>All</label>
+            <label class="btn btn-secondary"><input type="radio" name="options">Bookmarks</label>
+          </div>
           <button type="button" class="btn btn-secondary float-right" data-toggle="modal" data-target="#new-activity">New Activity</button>
           <div class="modal fade" id="new-activity" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title">Create Activity</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                  <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
                   </button>
                 </div>
                 <div class="modal-body">
@@ -133,7 +136,7 @@
                     <div class="form-group">
                       <label for="new-activity-title">Activity Title</label>
                       <input ng-model="newActivityTitle" type="text" class="form-control" id="new-activity-title" placeholder="Enter activity">
-                      <small class="form-text text-muted">Smoking a fat one with the boys</small>
+                      <small class="form-text text-muted">Blacking out at Ricks on a Friday via Mindprobes</small>
                     </div>
                     <div class="form-group">
                       <label for="new-activity-cost">Cost select</label>
@@ -168,7 +171,7 @@
             <a href="javascript:void(0)" class="black-font">+</a>
           </div>
           <div class="card-body grey-bg">
-            <p class="h2">{{result.title}}</p>
+            <p class="card-body-title h2 mb-5">{{result.title}}</p>
             <p><b>Cost:</b> {{result.cost}}</p>
             <p><b>Location:</b> {{result.location}}</p>
           </div>
