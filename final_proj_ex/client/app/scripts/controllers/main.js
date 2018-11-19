@@ -44,13 +44,23 @@ angular.module('clientApp')
 	};
 
 	$scope.filterPrice = function(priceF) {
-		$('#priceFilterBtn').text(priceF);
-		$scope.activities = Activity.getList({cost:priceF, limit:100}).$object;
+		if (priceF === 'All') {
+			$('#priceFilterBtn').text('Cost');
+			$scope.activities = Activity.getList({limit:100}).$object;
+		} else {
+			$('#priceFilterBtn').text(priceF);
+			$scope.activities = Activity.getList({cost:priceF, limit:100}).$object;
+		}
 	};
 
 	$scope.filterLocation = function(locationF) {
-		$('#locationFilterBtn').text(locationF);
-		$scope.activities = Activity.getList({location:locationF, limit:100}).$object;
+		if (locationF === 'All') {
+			$('#locationFilterBtn').text('Location');
+			$scope.activities = Activity.getList({limit:100}).$object;
+		} else {
+			$('#locationFilterBtn').text(locationF);
+			$scope.activities = Activity.getList({location:locationF, limit:100}).$object;
+		}
 	};
 
 });
