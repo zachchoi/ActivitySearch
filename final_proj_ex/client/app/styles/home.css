@@ -1,0 +1,38 @@
+.jumbotron {
+	display:flex;
+  	align-items:center;
+	text-align: center;
+	height: 200px;
+}
+
+.card {
+	border-style: none;
+}
+
+.card-header {
+	text-align: right;
+}
+
+.card-body {
+	height: 200px;
+}
+
+.card-body-title {
+	height: 40px;
+}
+
+.grey-bg {
+	background-color: #e9ecef;
+}
+
+.white-bg {
+	background-color: white;
+}
+
+.black-font {
+	color: black;
+}
+
+.black-font:hover {
+	color: black;
+}

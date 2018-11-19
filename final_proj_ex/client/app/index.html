@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.min.js"></script>
+    <!-- <link rel='stylesheet' type='text/css' href='style/home.css'> -->
+    <link rel="stylesheet" href="styles/home.css">
+    <!-- <script src="scripts/script.js"></script> -->
+    <title>EECS493 Project</title>
+  </head>
+  <body ng-app="clientApp">
+    <!-- Navigation bar -->
+    <nav class="navbar bg-dark navbar-dark">
+      <a class="navbar-brand" href="#">EECS493</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#na">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="na">
+        <ul class="navbar-nav">
+          <li ng-show="!loginStatus" class="nav-item"><a class="nav-link" href="javascript:void(0)" data-toggle="modal" data-target="#login">Log in</a></li>
+          <li ng-show="!loginStatus" class="nav-item"><a class="nav-link" href="javascript:void(0)" data-toggle="modal" data-target="#register">Register</a></li>
+          <li ng-show="loginStatus" class="nav-item"><a class="nav-link" href="javascript:void(0)">Log out</a></li> 
+        </ul>
+      </div>
+      <div class="modal fade" id="login" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Log in</h5>
+              <button type="button" class="close" data-dismiss="modal">
+                <span>&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="login-username">Username</label>
+                  <input ng-model="loginUsername" type="text" class="form-control" id="login-username" placeholder="Username">
+                </div>
+                <div class="form-group">
+                  <label for="login-password">Password</label>
+                  <input ng-model="loginPassword" type="text" class="form-control" id="login-password" placeholder="Password">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button ng-disabled="loginUsername === undefined || loginPassword === undefined" ng-click="" type="button" class="btn btn-secondary">Log in</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="register" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Register</h5>
+              <button type="button" class="close" data-dismiss="modal">
+                <span>&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <label for="register-username">Username</label>
+                  <input ng-model="registerUsername" type="text" class="form-control" id="register-username" placeholder="Username">
+                </div>
+                <div class="form-group">
+                  <label for="register-password">Password</label>
+                  <input ng-model="registerPassword" type="text" class="form-control" id="register-password" placeholder="Password">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button ng-disabled="registerUsername === undefined || registerPassword === undefined" ng-click="" type="button" class="btn btn-secondary">Register</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- Jumbotron -->
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <h1 class="display-4">Ann Arbor Activity</h1>
+        <p class="lead">Search engine for what locals in Ann Arbor actually do</p>
+      </div>
+    </div>
+    <div ng-controller="MainCtrl">
+      <div class="mx-5">
+        <form class="justify-content-center">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search Activity">
+          </div>
+        </form>
+        <div>
+          <div class="btn-group">
+            <button id="priceFilterBtn" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+              Cost
+            </button>
+            <div class="dropdown-menu">
+              <a ng-click="filterPrice('Free')" class="dropdown-item" href="javascript:void(0)">Free</a>
+              <a ng-click="filterPrice('Cheap')" class="dropdown-item" href="javascript:void(0)">Cheap</a>
+              <a ng-click="filterPrice('Expensive')" class="dropdown-item" href="javascript:void(0)">Expensive</a>
+            </div>
+          </div>
+          <div class="btn-group">
+            <button id="locationFilterBtn" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+              Location
+            </button>
+            <div class="dropdown-menu">
+              <a ng-click="filterLocation('Central')" class="dropdown-item" href="javascript:void(0)">Central</a>
+              <a ng-click="filterLocation('North')" class="dropdown-item" href="javascript:void(0)">North</a>
+            </div>
+          </div>
+          <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <label class="btn btn-secondary active"><input type="radio" name="options" checked>All</label>
+            <label class="btn btn-secondary"><input type="radio" name="options">Bookmarks</label>
+          </div>
+          <button type="button" class="btn btn-secondary float-right" data-toggle="modal" data-target="#new-activity">New Activity</button>
+          <div class="modal fade" id="new-activity" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Create Activity</h5>
+                  <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form>
+                    <div class="form-group">
+                      <label for="new-activity-title">Activity Title</label>
+                      <input ng-model="newActivityTitle" type="text" class="form-control" id="new-activity-title" placeholder="Enter activity">
+                      <small class="form-text text-muted">Blacking out at Ricks on a Friday via Mindprobes</small>
+                    </div>
+                    <div class="form-group">
+                      <label for="new-activity-cost">Cost select</label>
+                      <select ng-model="newActivityCost" class="form-control" id="new-activity-cost">
+                        <option>Free</option>
+                        <option>Cheap</option>
+                        <option>Expensive</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                      <label for="new-activity-location">Location select</label>
+                      <select ng-model="newActivityLocation" class="form-control" id="new-activity-location">
+                        <option>Central</option>
+                        <option>North</option>
+                      </select>
+                    </div>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button ng-disabled="newActivityTitle === undefined || newActivityCost === undefined || newActivityLocation === undefined" ng-click="newActivity()" type="button" class="btn btn-secondary" data-dismiss="modal" data-backdrop="false">Save Activity</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Search Result in card columns -->
+      <div class="card-columns mx-5 my-3">
+        <div ng-repeat="activity in activities track by $index" class="card">
+          <div class="card-header white-bg">
+            <a href="javascript:void(0)" class="black-font">+</a>
+          </div>
+          <div class="card-body grey-bg">
+            <p class="card-body-title h2 mb-5">{{activity.title}}</p>
+            <p><b>Cost:</b> {{activity.cost}}</p>
+            <p><b>Location:</b> {{activity.location}}</p>
+          </div>
+          <div class="card-footer container white-bg">
+            <div class="row">
+              <a ng-click="upVote($index)" href="javascript:void(0)" class="black-font">↑</a>
+              <p>{{activity.vote}}</p>
+              <a ng-click="downVote($index)" href="javascript:void(0)" class="black-font">↓</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="bower_components/lodash/lodash.js"></script>
+    <script src="bower_components/restangular/dist/restangular.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/controllers/main.js"></script>
+    <script src="scripts/controllers/about.js"></script>
+    <script src="scripts/controllers/activities.js"></script>
+    <script src="scripts/controllers/activity-add.js"></script>
+    <!-- endbuild -->
+  </body>
+</html>

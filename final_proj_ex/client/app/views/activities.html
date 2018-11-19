@@ -1,0 +1,15 @@
+<p>This is the activities view.</p>
+<table class="table table-striped">
+  <thead>
+    <th>Title</th>
+    <th>Cost</th>
+    <th>Location</th>
+  </thead>
+  <tbody>
+    <tr ng-repeat="activity in activities">
+      <td>{{ activity.title }}</td>
+      <td>{{ activity.cost }}</td>
+      <td>{{ activity.location }}</td>
+    </tr>
+  </tbody>
+</table>
