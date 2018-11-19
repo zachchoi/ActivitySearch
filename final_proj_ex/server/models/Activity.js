@@ -16,7 +16,11 @@ var ActivitySchema = new mongoose.Schema({
 	vote: {
 		type: Number,
 		required: true
-	}
+	},
+	bookmarkUsers: [{
+		type: String,
+		required: false
+	}]
 });
 
 module.exports = mongoose.model('activity', ActivitySchema);

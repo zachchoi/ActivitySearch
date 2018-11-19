@@ -171,7 +171,7 @@
       <div class="card-columns mx-5 my-3">
         <div ng-repeat="activity in activities track by $index" class="card">
           <div class="card-header white-bg">
-            <a href="javascript:void(0)" class="black-font">+</a>
+            <a ng-click="addBookmark($index)" href="javascript:void(0)" class="black-font">Add to Bookmarks +</a>
           </div>
           <div class="card-body grey-bg">
             <p class="card-body-title h2 mb-5">{{activity.title}}</p>
@@ -194,7 +194,7 @@
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/angular/angular.js"></script>
+    <!-- <script src="bower_components/angular/angular.js"></script> -->
     <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.js"></script>
     <script src="bower_components/angular-resource/angular-resource.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>

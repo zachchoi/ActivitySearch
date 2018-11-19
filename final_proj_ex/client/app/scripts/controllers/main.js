@@ -20,7 +20,8 @@ angular.module('clientApp')
 			title: $scope.newActivityTitle,
 			cost: $scope.newActivityCost,
 			location: $scope.newActivityLocation,
-			vote: 0
+			vote: 0,
+			bookmarkUsers: []
 		};
 
         Activity.post(newA).then(function() {
@@ -35,12 +36,31 @@ angular.module('clientApp')
 	};
 
 	$scope.upVote = function(index) {
-		// console.log($scope.activities);
-		$scope.activities[index].vote++;
+		Activity.getList({title:$scope.activities[index].title}).then(function(activityRes) {
+			var thisActivity = activityRes[0];
+			thisActivity.vote++;
+			thisActivity.put();
+			$scope.activities[index] = thisActivity;
+		});
 	};
 
 	$scope.downVote = function(index) {
-		$scope.activities[index].vote--;
+		Activity.getList({title:$scope.activities[index].title}).then(function(activityRes) {
+			var thisActivity = activityRes[0];
+			thisActivity.vote--;
+			thisActivity.put();
+			$scope.activities[index] = thisActivity;
+		});
+	};
+
+	$scope.addBookmark = function(index) {
+		//$scope.activities[index].bookmarkUsers.push('testUser');
+		Activity.getList({title:$scope.activities[index].title}).then(function(activityRes) {
+			var thisActivity = activityRes[0];
+			thisActivity.bookmarkUsers.push('testUser');
+			thisActivity.put();
+			$scope.activities[index] = thisActivity;
+		});
 	};
 
 	$scope.filterPrice = function(priceF) {
