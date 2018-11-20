@@ -37,6 +37,14 @@
 	color: black;
 }
 
-.black-font:hover {
+/*.black-font:hover {
 	color: black;
+}*/
+
+.green-font {
+	color: green;
+}
+
+.red-font {
+	color: red;
 }

@@ -174,9 +174,7 @@
       <div class="card-columns mx-5 my-3">
         <div ng-repeat="activity in activities track by $index" class="card">
           <div class="card-header white-bg">
-            <!-- <a ng-show="!bookmarks[$index]" ng-click="addBookmark($index)" href="javascript:void(0)" style="color: green">Add to Bookmarks +</a> -->
             <button ng-show="!bookmarks[$index]" ng-disabled="loggedInUser === undefined" ng-click="addBookmark($index)" type="button" class="btn btn-success">Add to Bookmarks +</button>
-            <!-- <a ng-show="bookmarks[$index]" ng-click="removeBookmark($index)" href="javascript:void(0)" style="color: red">Remove from Bookmarks</a> -->
             <button ng-show="bookmarks[$index]" ng-disabled="loggedInUser === undefined" ng-click="removeBookmark($index)" type="button" class="btn btn-danger">Remove from Bookmarks</button>
           </div>
           <div class="card-body grey-bg">
@@ -186,9 +184,9 @@
           </div>
           <div class="card-footer white-bg">
             <p class="d-inline">Rating:   </p>
-            <a ng-click="upVote($index)" href="javascript:void(0)" class="black-font d-inline">↑</a>
+            <button ng-click="upVote($index)" ng-disabled="loggedInUser === undefined" class="black-font d-inline" id="upBtn{{$index}}">↑</button>
             <p class="d-inline">{{activity.vote}}</p>
-            <a ng-click="downVote($index)" href="javascript:void(0)" class="black-font d-inline">↓</a>
+            <button ng-click="downVote($index)" ng-disabled="loggedInUser === undefined" class="black-font d-inline" id="downBtn{{$index}}">↓</button>
           </div>
         </div>
       </div>
@@ -199,7 +197,7 @@
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
-    <!-- <script src="bower_components/angular/angular.js"></script> -->
+    <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap.js"></script>
     <script src="bower_components/angular-resource/angular-resource.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>

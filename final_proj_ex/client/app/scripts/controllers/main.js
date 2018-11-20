@@ -61,18 +61,58 @@ angular.module('clientApp')
 	$scope.upVote = function(index) {
 		Activity.getList({title:$scope.activities[index].title}).then(function(activityRes) {
 			var thisActivity = activityRes[0];
-			thisActivity.vote++;
-			thisActivity.put();
-			$scope.activities[index] = thisActivity;
+			User.getList({username:$scope.loggedInUser}).then(function(userRes) {
+				var thisUser = userRes[0];
+				if (thisUser.likes.includes(thisActivity.title)) {
+					thisUser.likes.splice(thisUser.likes.indexOf(thisActivity.title), 1);
+					thisActivity.vote--;
+					$('#upBtn' + index).removeClass('green-font');
+					$('#upBtn' + index).addClass('black-font');
+				} else {
+					if (thisUser.dislikes.includes(thisActivity.title)) {
+						thisUser.dislikes.splice(thisUser.dislikes.indexOf(thisActivity.title), 1);
+						thisActivity.vote++;
+						$('#downBtn' + index).removeClass('red-font');
+					}
+					thisUser.likes.push(thisActivity.title);
+					thisActivity.vote++;
+					$('#upBtn' + index).addClass('green-font');
+				}
+			
+				$scope.activities[index] = thisActivity;
+				thisActivity.put();
+				thisUser.put();
+				//$scope.activities[index] = thisActivity;
+			});		
 		});
 	};
 
 	$scope.downVote = function(index) {
 		Activity.getList({title:$scope.activities[index].title}).then(function(activityRes) {
 			var thisActivity = activityRes[0];
-			thisActivity.vote--;
-			thisActivity.put();
-			$scope.activities[index] = thisActivity;
+			User.getList({username:$scope.loggedInUser}).then(function(userRes) {
+				var thisUser = userRes[0];
+				if (thisUser.dislikes.includes(thisActivity.title)) {
+					thisUser.dislikes.splice(thisUser.dislikes.indexOf(thisActivity.title), 1);
+					thisActivity.vote++;
+					$('#downBtn' + index).removeClass('red-font');
+					$('#downBtn' + index).addClass('black-font');
+				} else {
+					if (thisUser.likes.includes(thisActivity.title)) {
+						thisUser.likes.splice(thisUser.likes.indexOf(thisActivity.title), 1);
+						thisActivity.vote--;
+						$('#upBtn' + index).removeClass('green-font');
+					}
+					thisUser.dislikes.push(thisActivity.title);
+					thisActivity.vote--;
+					$('#downBtn' + index).addClass('red-font');
+				}
+			
+				$scope.activities[index] = thisActivity;
+				thisActivity.put();
+				thisUser.put();
+				// $scope.activities[index] = thisActivity;
+			});		
 		});
 	};
 

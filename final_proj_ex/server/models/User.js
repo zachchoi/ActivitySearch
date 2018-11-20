@@ -12,6 +12,10 @@ var UserSchema = new mongoose.Schema({
 	likes: [{
 		type: String,
 		required: false
+	}],
+	dislikes: [{
+		type: String,
+		required: false
 	}]
 });
 
