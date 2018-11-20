@@ -48,4 +48,14 @@ angular
     })
     .factory('Activity', function(ActivityRestangular) {
       return ActivityRestangular.service('activity');
+    })
+    .factory('UserRestangular', function(Restangular) {
+      return Restangular.withConfig(function(RestangularConfigurer) {
+        RestangularConfigurer.setRestangularFields({
+          id: '_id'
+        });
+      });
+    })
+    .factory('User', function(UserRestangular) {
+      return UserRestangular.service('user');
     });

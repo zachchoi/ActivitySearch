@@ -14,84 +14,87 @@
     <title>EECS493 Project</title>
   </head>
   <body ng-app="clientApp">
-    <!-- Navigation bar -->
-    <nav class="navbar bg-dark navbar-dark">
-      <a class="navbar-brand" href="#">EECS493</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#na">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="na">
-        <ul class="navbar-nav">
-          <li ng-show="!loginStatus" class="nav-item"><a class="nav-link" href="javascript:void(0)" data-toggle="modal" data-target="#login">Log in</a></li>
-          <li ng-show="!loginStatus" class="nav-item"><a class="nav-link" href="javascript:void(0)" data-toggle="modal" data-target="#register">Register</a></li>
-          <li ng-show="loginStatus" class="nav-item"><a class="nav-link" href="javascript:void(0)">Log out</a></li> 
-        </ul>
-      </div>
-      <div class="modal fade" id="login" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Log in</h5>
-              <button type="button" class="close" data-dismiss="modal">
-                <span>&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form>
-                <div class="form-group">
-                  <label for="login-username">Username</label>
-                  <input ng-model="loginUsername" type="text" class="form-control" id="login-username" placeholder="Username">
-                </div>
-                <div class="form-group">
-                  <label for="login-password">Password</label>
-                  <input ng-model="loginPassword" type="text" class="form-control" id="login-password" placeholder="Password">
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button ng-disabled="loginUsername === undefined || loginPassword === undefined" ng-click="" type="button" class="btn btn-secondary">Log in</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal fade" id="register" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Register</h5>
-              <button type="button" class="close" data-dismiss="modal">
-                <span>&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form>
-                <div class="form-group">
-                  <label for="register-username">Username</label>
-                  <input ng-model="registerUsername" type="text" class="form-control" id="register-username" placeholder="Username">
-                </div>
-                <div class="form-group">
-                  <label for="register-password">Password</label>
-                  <input ng-model="registerPassword" type="text" class="form-control" id="register-password" placeholder="Password">
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button ng-disabled="registerUsername === undefined || registerPassword === undefined" ng-click="" type="button" class="btn btn-secondary">Register</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </nav>
-    <!-- Jumbotron -->
-    <div class="jumbotron jumbotron-fluid">
-      <div class="container">
-        <h1 class="display-4">Ann Arbor Activity</h1>
-        <p class="lead">Search engine for what locals in Ann Arbor actually do</p>
-      </div>
-    </div>
+
+    <!-- Main Controller -->
     <div ng-controller="MainCtrl">
+      <!-- Navigation bar -->
+      <nav class="navbar bg-dark navbar-dark">
+        <a class="navbar-brand" href="#">EECS493</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#na">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="na">
+          <ul class="navbar-nav">
+            <li ng-show="!loggedInUser" class="nav-item"><a class="nav-link" data-toggle="modal" data-target="#login">Log in</a></li>
+            <li ng-show="!loggedInUser" class="nav-item"><a class="nav-link" data-toggle="modal" data-target="#register">Register</a></li>
+            <li ng-show="loggedInUser" class="nav-item"><a ng-click="logoutUser()" class="nav-link">Log out</a></li> 
+          </ul>
+        </div>
+        <div class="modal fade" id="login" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Log in</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                  <span>&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="form-group">
+                    <label for="login-username">Username</label>
+                    <input ng-model="loginUsername" type="text" class="form-control" id="login-username" placeholder="Username">
+                  </div>
+                  <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input ng-model="loginPassword" type="text" class="form-control" id="login-password" placeholder="Password">
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button ng-disabled="loginUsername === undefined || loginPassword === undefined" ng-click="loginUser()" type="button" class="btn btn-secondary" data-dismiss="modal" data-backdrop="false">Log in</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="register" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Register</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                  <span>&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="form-group">
+                    <label for="register-username">Username</label>
+                    <input ng-model="registerUsername" type="text" class="form-control" id="register-username" placeholder="Username">
+                  </div>
+                  <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input ng-model="registerPassword" type="text" class="form-control" id="register-password" placeholder="Password">
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button ng-disabled="registerUsername === undefined || registerPassword === undefined" ng-click="newUser()" type="button" class="btn btn-secondary" data-dismiss="modal" data-backdrop="false">Register</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+      <!-- Jumbotron -->
+      <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+          <h1 class="display-4">Ann Arbor Activity</h1>
+          <p class="lead">Search engine for what locals in Ann Arbor actually do</p>
+        </div>
+      </div>
+      <!-- Content -->
       <div class="mx-5">
         <form class="justify-content-center">
           <div class="form-group">
@@ -171,19 +174,21 @@
       <div class="card-columns mx-5 my-3">
         <div ng-repeat="activity in activities track by $index" class="card">
           <div class="card-header white-bg">
-            <a ng-click="addBookmark($index)" href="javascript:void(0)" class="black-font">Add to Bookmarks +</a>
+            <!-- <a ng-show="!bookmarks[$index]" ng-click="addBookmark($index)" href="javascript:void(0)" style="color: green">Add to Bookmarks +</a> -->
+            <button ng-show="!bookmarks[$index]" ng-disabled="loggedInUser === undefined" ng-click="addBookmark($index)" type="button" class="btn btn-success">Add to Bookmarks +</button>
+            <!-- <a ng-show="bookmarks[$index]" ng-click="removeBookmark($index)" href="javascript:void(0)" style="color: red">Remove from Bookmarks</a> -->
+            <button ng-show="bookmarks[$index]" ng-disabled="loggedInUser === undefined" ng-click="removeBookmark($index)" type="button" class="btn btn-danger">Remove from Bookmarks</button>
           </div>
           <div class="card-body grey-bg">
             <p class="card-body-title h2 mb-5">{{activity.title}}</p>
             <p><b>Cost:</b> {{activity.cost}}</p>
             <p><b>Location:</b> {{activity.location}}</p>
           </div>
-          <div class="card-footer container white-bg">
-            <div class="row">
-              <a ng-click="upVote($index)" href="javascript:void(0)" class="black-font">↑</a>
-              <p>{{activity.vote}}</p>
-              <a ng-click="downVote($index)" href="javascript:void(0)" class="black-font">↓</a>
-            </div>
+          <div class="card-footer white-bg">
+            <p class="d-inline">Rating:   </p>
+            <a ng-click="upVote($index)" href="javascript:void(0)" class="black-font d-inline">↑</a>
+            <p class="d-inline">{{activity.vote}}</p>
+            <a ng-click="downVote($index)" href="javascript:void(0)" class="black-font d-inline">↓</a>
           </div>
         </div>
       </div>
