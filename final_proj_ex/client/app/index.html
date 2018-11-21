@@ -98,7 +98,7 @@
       <div class="mx-5">
         <form class="justify-content-center">
           <div class="form-group">
-            <input type="text" class="form-control" placeholder="Search Activity">
+            <input id="searchBar" type="text" class="form-control" placeholder="Search Activity - Press Enter to search">
           </div>
         </form>
         <div>
@@ -107,10 +107,10 @@
               Cost
             </button>
             <div class="dropdown-menu">
-              <a ng-click="filterPrice('Free')" class="dropdown-item" href="javascript:void(0)">Free</a>
-              <a ng-click="filterPrice('Cheap')" class="dropdown-item" href="javascript:void(0)">Cheap</a>
-              <a ng-click="filterPrice('Expensive')" class="dropdown-item" href="javascript:void(0)">Expensive</a>
-              <a ng-click="filterPrice('All')" class="dropdown-item" href="javascript:void(0)">All</a>
+              <a ng-click="priceF='Free'; applyFilters()" class="dropdown-item" href="javascript:void(0)">Free</a>
+              <a ng-click="priceF='Cheap'; applyFilters()" class="dropdown-item" href="javascript:void(0)">Cheap</a>
+              <a ng-click="priceF='Expensive'; applyFilters()" class="dropdown-item" href="javascript:void(0)">Expensive</a>
+              <a ng-click="priceF='All'; applyFilters()" class="dropdown-item" href="javascript:void(0)">All</a>
             </div>
           </div>
           <div class="btn-group">
@@ -118,14 +118,14 @@
               Location
             </button>
             <div class="dropdown-menu">
-              <a ng-click="filterLocation('Central')" class="dropdown-item" href="javascript:void(0)">Central</a>
-              <a ng-click="filterLocation('North')" class="dropdown-item" href="javascript:void(0)">North</a>
-              <a ng-click="filterLocation('All')" class="dropdown-item" href="javascript:void(0)">All</a>
+              <a ng-click="locationF='Central'; applyFilters()" class="dropdown-item" href="javascript:void(0)">Central</a>
+              <a ng-click="locationF='North'; applyFilters()" class="dropdown-item" href="javascript:void(0)">North</a>
+              <a ng-click="locationF='All'; applyFilters()" class="dropdown-item" href="javascript:void(0)">All</a>
             </div>
           </div>
           <div class="btn-group btn-group-toggle" data-toggle="buttons">
-            <label class="btn btn-secondary active"><input type="radio" name="options" checked>All</label>
-            <label class="btn btn-secondary"><input type="radio" name="options">Bookmarks</label>
+            <button ng-click="showAll()" type="button" class="btn btn-secondary">All</button>
+            <button ng-click="showBookmarks()" type="button" class="btn btn-secondary">Bookmarks</button>
           </div>
           <button type="button" class="btn btn-secondary float-right" data-toggle="modal" data-target="#new-activity">New Activity</button>
           <div class="modal fade" id="new-activity" tabindex="-1" role="dialog">
@@ -142,7 +142,7 @@
                     <div class="form-group">
                       <label for="new-activity-title">Activity Title</label>
                       <input ng-model="newActivityTitle" type="text" class="form-control" id="new-activity-title" placeholder="Enter activity">
-                      <small class="form-text text-muted">Blacking out at Ricks on a Friday via Mindprobes</small>
+                      <small class="form-text text-muted">Attending a UofM football game</small>
                     </div>
                     <div class="form-group">
                       <label for="new-activity-cost">Cost select</label>
@@ -171,6 +171,10 @@
         </div>
       </div>
       <!-- Search Result in card columns -->
+      <div class="container">
+        <br>
+        <h4 ng-show="!loggedInUser" style="text-align:center;">You must be logged in to use bookmarks or upvote/downvote an activity.</h4>
+      </div>
       <div class="card-columns mx-5 my-3">
         <div ng-repeat="activity in activities track by $index" class="card">
           <div class="card-header white-bg">

@@ -10,7 +10,14 @@
 angular.module('clientApp')
   .controller('MainCtrl', function($scope, Activity, User) {
 
+  	$(function () {
+	  $('[data-toggle="tooltip"]').tooltip()
+	})
+
 	$scope.loggedInUser = undefined;
+
+	$scope.locationF = "All";
+	$scope.priceF = "All";
 
 	$scope.activities = Activity.getList({limit:100}).$object;
 	$scope.bookmarks = [];
@@ -19,6 +26,28 @@ angular.module('clientApp')
 		for (var i = 0; i < allActivities.length; ++i) {
 			$scope.bookmarks.push(false);
 		}
+	});
+
+	$("#searchBar").keyup(function(e){
+	    if (e.keyCode == 13) {
+	    	$scope.activities = [];
+			$scope.bookmarks = [];
+	    	Activity.getList({limit:100}).then(function(allActivities) {
+				for (var i = 0; i < allActivities.length; ++i) {
+					var thisActivity = allActivities[i];
+					if (thisActivity.title.includes($("#searchBar").val())) {
+						$scope.activities.push(thisActivity);
+						if ($scope.loggedInUser) {
+							if (thisActivity.bookmarkUsers.includes($scope.loggedInUser)) {
+								$scope.bookmarks.push(true);
+							} else {
+								$scope.bookmarks.push(false);
+							}
+						}
+					}
+				}
+			});
+	    }
 	});
 
 	$scope.newActivity = function() {
@@ -142,25 +171,63 @@ angular.module('clientApp')
 		});
 	};
 
-	$scope.filterPrice = function(priceF) {
-		if (priceF === 'All') {
-			$('#priceFilterBtn').text('Cost');
-			$scope.activities = Activity.getList({limit:100}).$object;
-		} else {
-			$('#priceFilterBtn').text(priceF);
-			$scope.activities = Activity.getList({cost:priceF, limit:100}).$object;
+	$scope.showBookmarks = function() {
+		if ($scope.loggedInUser) {
+			$scope.activities = [];
+			$scope.bookmarks = [];
+
+			Activity.getList({limit:100}).then(function(allActivities) {
+				for (var i = 0; i < allActivities.length; ++i) {
+					var thisActivity = allActivities[i];
+					if (thisActivity.bookmarkUsers.includes($scope.loggedInUser)) {
+						$scope.activities.push(thisActivity);
+						$scope.bookmarks.push(true);
+					}
+				}
+			});
 		}
 	};
 
-	$scope.filterLocation = function(locationF) {
-		if (locationF === 'All') {
-			$('#locationFilterBtn').text('Location');
-			$scope.activities = Activity.getList({limit:100}).$object;
-		} else {
-			$('#locationFilterBtn').text(locationF);
-			$scope.activities = Activity.getList({location:locationF, limit:100}).$object;
+	$scope.showAll = function() {
+		if ($scope.loggedInUser) {
+			$scope.activities = [];
+			$scope.bookmarks = [];
+
+			Activity.getList({limit:100}).then(function(allActivities) {
+				for (var i = 0; i < allActivities.length; ++i) {
+					var thisActivity = allActivities[i];
+					$scope.activities.push(thisActivity);
+					if (thisActivity.bookmarkUsers.includes($scope.loggedInUser)) {
+						$scope.bookmarks.push(true);
+					} else {
+						$scope.bookmarks.push(false);
+					}
+				}
+			});
 		}
 	};
+
+	$scope.applyFilters = function() {
+		if ($scope.locationF === 'All') {
+			$('#locationFilterBtn').text('Location');
+			if ($scope.priceF === 'All') {
+				$('#priceFilterBtn').text('Cost');
+				$scope.activities = Activity.getList({limit:100}).$object;
+			} else {
+				$('#priceFilterBtn').text($scope.priceF);
+				$scope.activities = Activity.getList({cost:$scope.priceF, limit:100}).$object;
+			}
+		} else {
+			$('#locationFilterBtn').text($scope.locationF);
+			if ($scope.priceF === 'All') {
+				$('#priceFilterBtn').text('Cost');
+				$scope.activities = Activity.getList({location:$scope.locationF, limit:100}).$object;
+			} else {
+				$('#priceFilterBtn').text($scope.priceF);
+				$scope.activities = Activity.getList({cost:$scope.priceF, location:$scope.locationF, limit:100}).$object;
+			}
+		}
+	};	
 
 	$scope.newUser = function() {
 		var newU = {
@@ -179,29 +246,31 @@ angular.module('clientApp')
 			}
 		});
 
-		if (!alreadyExists) {
-			User.post(newU).then(function() {
-	          $scope.loggedInUser = newU.username;
-	          $scope.activities = Activity.getList({limit:100}).$object;
+		setTimeout(function() {
+			if (!alreadyExists) {
+				User.post(newU).then(function() {
+		          $scope.loggedInUser = newU.username;
+		          $scope.activities = Activity.getList({limit:100}).$object;
 
-	          $scope.bookmarks = [];
-			  Activity.getList({limit:100}).then(function(allActivities) {
-	          	for (var i = 0; i < allActivities.length; ++i) {
-					if (allActivities[i].bookmarkUsers.includes($scope.loggedInUser)) {
-						$scope.bookmarks.push(true);
-					} else {
-						$scope.bookmarks.push(false);
-					}
-				  }
-			  });
-	        });
-		} else {
-			alert("Sorry, the username \'" + $scope.registerUsername + "\' is already taken. Please choose another.");
-		}
+		          $scope.bookmarks = [];
+				  Activity.getList({limit:100}).then(function(allActivities) {
+		          	for (var i = 0; i < allActivities.length; ++i) {
+						if (allActivities[i].bookmarkUsers.includes($scope.loggedInUser)) {
+							$scope.bookmarks.push(true);
+						} else {
+							$scope.bookmarks.push(false);
+						}
+					  }
+				  });
+		        });
+			} else {
+				alert("Sorry, the username \'" + $scope.registerUsername + "\' is already taken. Please choose another.");
+			}
 
-		$('#register-username').val(undefined);
-		$('#register-password').val(undefined);
-		//$('#new-activity').modal('hide');
+			$('#register-username').val(undefined);
+			$('#register-password').val(undefined);
+			//$('#new-activity').modal('hide');
+		}, 300);
 	};
 
 	$scope.loginUser = function() {
