@@ -1,0 +1,35 @@
+Relevant files for grading can be found at:
+	•	final_proj_ex/client/app/index.html
+	•	final_proj_ex/client/app/scripts/controllers/main.js
+	•	final_proj_ex/client/app/styles/home.css
+
+
+The following are mac terminal commands that worked for us when setting up this project.
+
+Instructions:
+
+	•	To start mongo:
+	⁃	cd final_proj_ex
+	⁃	brew install node
+	⁃	brew install mongodb
+	⁃	npm install -g grunt-cli
+	⁃	npm install -g bower
+	⁃	gem install compass
+	⁃	mongod
+
+
+	•	To launch server:
+	⁃	cd server
+	⁃	npm install —save express
+	⁃	npm install —save mongoose
+	⁃	npm install —save resourcejs
+	⁃	npm install —save method-override
+	⁃	npm install —save body-parser
+	⁃	npm install —save lodash
+	⁃	node index.js
+
+
+	•	To serve front-end:
+	⁃	cd ../client
+	⁃	bower install —save restangular
+	⁃	grunt serve —force

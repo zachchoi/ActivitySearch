@@ -19,20 +19,24 @@ angular.module('clientApp')
 	$scope.locationF = "All";
 	$scope.priceF = "All";
 
-	$scope.activities = Activity.getList({limit:100}).$object;
 	$scope.bookmarks = [];
 
 	Activity.getList({limit:100}).then(function(allActivities) {
+		allActivities.sort(function(a,b){return b.vote - a.vote});
+		$scope.activities = allActivities;
+
 		for (var i = 0; i < allActivities.length; ++i) {
 			$scope.bookmarks.push(false);
 		}
 	});
+
 
 	$("#searchBar").keyup(function(e){
 	    if (e.keyCode == 13) {
 	    	$scope.activities = [];
 			$scope.bookmarks = [];
 	    	Activity.getList({limit:100}).then(function(allActivities) {
+	    		allActivities.sort(function(a,b){return b.vote - a.vote});
 				for (var i = 0; i < allActivities.length; ++i) {
 					var thisActivity = allActivities[i];
 					if (thisActivity.title.includes($("#searchBar").val())) {
@@ -61,10 +65,11 @@ angular.module('clientApp')
 
         Activity.post(newA).then(function() {
           //$location.path('/activities');
-          $scope.activities = Activity.getList({limit:100}).$object;
 
           $scope.bookmarks = [];
           Activity.getList({limit:100}).then(function(allActivities) {
+          	  allActivities.sort(function(a,b){return b.vote - a.vote});
+          	  $scope.activities = allActivities;
 			  if ($scope.loggedInUser) {
 	          	for (var i = 0; i < allActivities.length; ++i) {
 					if (allActivities[i].bookmarkUsers.includes($scope.loggedInUser)) {
@@ -95,17 +100,18 @@ angular.module('clientApp')
 				if (thisUser.likes.includes(thisActivity.title)) {
 					thisUser.likes.splice(thisUser.likes.indexOf(thisActivity.title), 1);
 					thisActivity.vote--;
-					$('#upBtn' + index).removeClass('green-font');
-					$('#upBtn' + index).addClass('black-font');
+					$('#upBtn' + index).removeClass('btn-success');
+					$('#upBtn' + index).addClass('btn-light');
 				} else {
 					if (thisUser.dislikes.includes(thisActivity.title)) {
 						thisUser.dislikes.splice(thisUser.dislikes.indexOf(thisActivity.title), 1);
 						thisActivity.vote++;
-						$('#downBtn' + index).removeClass('red-font');
+						$('#downBtn' + index).removeClass('btn-danger');
 					}
 					thisUser.likes.push(thisActivity.title);
 					thisActivity.vote++;
-					$('#upBtn' + index).addClass('green-font');
+					$('#upBtn' + index).removeClass('btn-light');
+					$('#upBtn' + index).addClass('btn-success');
 				}
 			
 				$scope.activities[index] = thisActivity;
@@ -124,17 +130,18 @@ angular.module('clientApp')
 				if (thisUser.dislikes.includes(thisActivity.title)) {
 					thisUser.dislikes.splice(thisUser.dislikes.indexOf(thisActivity.title), 1);
 					thisActivity.vote++;
-					$('#downBtn' + index).removeClass('red-font');
-					$('#downBtn' + index).addClass('black-font');
+					$('#downBtn' + index).removeClass('btn-danger');
+					$('#downBtn' + index).addClass('btn-light');
 				} else {
 					if (thisUser.likes.includes(thisActivity.title)) {
 						thisUser.likes.splice(thisUser.likes.indexOf(thisActivity.title), 1);
 						thisActivity.vote--;
-						$('#upBtn' + index).removeClass('green-font');
+						$('#upBtn' + index).removeClass('btn-success');
 					}
 					thisUser.dislikes.push(thisActivity.title);
 					thisActivity.vote--;
-					$('#downBtn' + index).addClass('red-font');
+					$('#downBtn' + index).removeClass('btn-light');
+					$('#downBtn' + index).addClass('btn-danger');
 				}
 			
 				$scope.activities[index] = thisActivity;
@@ -171,19 +178,57 @@ angular.module('clientApp')
 		});
 	};
 
+	$scope.applyLikes = function(bookmarkIndex) {
+		if ($('#upBtn' + bookmarkIndex).hasClass('btn-light')) {
+			$('#upBtn' + bookmarkIndex).removeClass('btn-light');
+		}
+		if ($('#downBtn' + bookmarkIndex).hasClass('btn-danger')) {
+			$('#downBtn' + bookmarkIndex).removeClass('btn-danger');
+		}
+		if (!$('#upBtn' + bookmarkIndex).hasClass('btn-success')) {
+			$('#upBtn' + bookmarkIndex).addClass('btn-success');
+		}
+	}
+
+	$scope.applyDislikes = function(bookmarkIndex) {
+		if ($('#downBtn' + bookmarkIndex).hasClass('btn-light')) {
+			$('#downBtn' + bookmarkIndex).removeClass('btn-light');
+		}
+		if ($('#upBtn' + bookmarkIndex).hasClass('btn-success')) {
+			$('#upBtn' + bookmarkIndex).removeClass('btn-success');
+		}
+		if (!$('#downBtn' + bookmarkIndex).hasClass('btn-danger')) {
+			$('#downBtn' + bookmarkIndex).addClass('btn-danger');
+		}
+	}
+
 	$scope.showBookmarks = function() {
 		if ($scope.loggedInUser) {
 			$scope.activities = [];
 			$scope.bookmarks = [];
 
 			Activity.getList({limit:100}).then(function(allActivities) {
-				for (var i = 0; i < allActivities.length; ++i) {
-					var thisActivity = allActivities[i];
-					if (thisActivity.bookmarkUsers.includes($scope.loggedInUser)) {
-						$scope.activities.push(thisActivity);
-						$scope.bookmarks.push(true);
+				allActivities.sort(function(a,b){return b.vote - a.vote});
+
+				User.getList({username:$scope.loggedInUser}).then(function(userRes) {
+					var thisUser = userRes[0];
+
+					for (var i = 0; i < allActivities.length; ++i) {
+						var thisActivity = allActivities[i];
+						if (thisActivity.bookmarkUsers.includes($scope.loggedInUser)) {
+							$scope.activities.push(thisActivity);
+							$scope.bookmarks.push(true);
+
+							if (thisUser.likes.includes(allActivities[i].title)) {
+								var bookmarkIndex = $scope.activities.length-1;
+								setTimeout($scope.applyLikes, 100, bookmarkIndex);
+							} else if (thisUser.dislikes.includes(allActivities[i].title)) {
+								var bookmarkIndex = $scope.activities.length-1;
+								setTimeout($scope.applyDislikes, 100, bookmarkIndex);
+							}
+						}
 					}
-				}
+				});
 			});
 		}
 	};
@@ -194,15 +239,31 @@ angular.module('clientApp')
 			$scope.bookmarks = [];
 
 			Activity.getList({limit:100}).then(function(allActivities) {
-				for (var i = 0; i < allActivities.length; ++i) {
-					var thisActivity = allActivities[i];
-					$scope.activities.push(thisActivity);
-					if (thisActivity.bookmarkUsers.includes($scope.loggedInUser)) {
-						$scope.bookmarks.push(true);
-					} else {
-						$scope.bookmarks.push(false);
+				allActivities.sort(function(a,b){return b.vote - a.vote});
+
+				User.getList({username:$scope.loggedInUser}).then(function(userRes) {
+					var thisUser = userRes[0];
+
+					for (var i = 0; i < allActivities.length; ++i) {
+						var thisActivity = allActivities[i];
+						$scope.activities.push(thisActivity);
+
+						if (thisUser.likes.includes(allActivities[i].title)) {
+							var bookmarkIndex = $scope.activities.length-1;
+							setTimeout($scope.applyLikes, 100, bookmarkIndex);
+						} else if (thisUser.dislikes.includes(allActivities[i].title)) {
+							var bookmarkIndex = $scope.activities.length-1;
+							setTimeout($scope.applyDislikes, 100, bookmarkIndex);
+						}
+
+						if (thisActivity.bookmarkUsers.includes($scope.loggedInUser)) {
+							$scope.bookmarks.push(true);
+
+						} else {
+							$scope.bookmarks.push(false);
+						}
 					}
-				}
+				});
 			});
 		}
 	};
@@ -212,19 +273,187 @@ angular.module('clientApp')
 			$('#locationFilterBtn').text('Location');
 			if ($scope.priceF === 'All') {
 				$('#priceFilterBtn').text('Cost');
-				$scope.activities = Activity.getList({limit:100}).$object;
+				$scope.bookmarks = [];
+		        Activity.getList({limit:100}).then(function(allActivities) {
+		        	allActivities.sort(function(a,b){return b.vote - a.vote});
+		          	$scope.activities = allActivities;
+		          	for (var i = 0; i < allActivities.length; ++i) {
+						if ($('#upBtn' + i).hasClass('btn-success')) {
+							$('#upBtn' + i).removeClass('btn-success');
+							$('#upBtn' + i).addClass('btn-light');
+						}
+						if ($('#downBtn' + i).hasClass('btn-danger')) {
+							$('#downBtn' + i).removeClass('btn-danger');
+							$('#downBtn' + i).addClass('btn-light');
+						}
+
+					}
+					if ($scope.loggedInUser) {
+						User.getList({username:$scope.loggedInUser}).then(function(userRes) {
+							var thisUser = userRes[0];
+
+							for (var i = 0; i < allActivities.length; ++i) {
+								var thisActivity = allActivities[i];
+								if (thisUser.likes.includes(allActivities[i].title)) {
+									var bookmarkIndex = i;
+									setTimeout($scope.applyLikes, 100, bookmarkIndex);
+								} else if (thisUser.dislikes.includes(allActivities[i].title)) {
+									var bookmarkIndex = i;
+									setTimeout($scope.applyDislikes, 100, bookmarkIndex);
+								}
+								
+								if (thisActivity.bookmarkUsers.includes($scope.loggedInUser)) {
+									$scope.bookmarks.push(true);
+
+								} else {
+									$scope.bookmarks.push(false);
+								}
+							}
+						});
+			        } else {
+			          	for (var i = 0; i < allActivities.length; ++i) {
+							$scope.bookmarks.push(false);
+						}
+			        }
+				});
 			} else {
 				$('#priceFilterBtn').text($scope.priceF);
-				$scope.activities = Activity.getList({cost:$scope.priceF, limit:100}).$object;
+				$scope.bookmarks = [];
+		        Activity.getList({cost:$scope.priceF, limit:100}).then(function(allActivities) {
+		        	allActivities.sort(function(a,b){return b.vote - a.vote});
+		          	$scope.activities = allActivities;
+		          	for (var i = 0; i < allActivities.length; ++i) {
+						if ($('#upBtn' + i).hasClass('btn-success')) {
+							$('#upBtn' + i).removeClass('btn-success');
+							$('#upBtn' + i).addClass('btn-light');
+						}
+						if ($('#downBtn' + i).hasClass('btn-danger')) {
+							$('#downBtn' + i).removeClass('btn-danger');
+							$('#downBtn' + i).addClass('btn-light');
+						}
+
+					}
+					if ($scope.loggedInUser) {
+			        	User.getList({username:$scope.loggedInUser}).then(function(userRes) {
+							var thisUser = userRes[0];
+
+							for (var i = 0; i < allActivities.length; ++i) {
+								var thisActivity = allActivities[i];
+								if (thisUser.likes.includes(allActivities[i].title)) {
+									var bookmarkIndex = i;
+									setTimeout($scope.applyLikes, 100, bookmarkIndex);
+								} else if (thisUser.dislikes.includes(allActivities[i].title)) {
+									var bookmarkIndex = i;
+									setTimeout($scope.applyDislikes, 100, bookmarkIndex);
+								}
+								
+								if (thisActivity.bookmarkUsers.includes($scope.loggedInUser)) {
+									$scope.bookmarks.push(true);
+
+								} else {
+									$scope.bookmarks.push(false);
+								}
+							}
+						});
+			        } else {
+			          	for (var i = 0; i < allActivities.length; ++i) {
+							$scope.bookmarks.push(false);
+						}
+			        }
+				});
 			}
 		} else {
 			$('#locationFilterBtn').text($scope.locationF);
 			if ($scope.priceF === 'All') {
 				$('#priceFilterBtn').text('Cost');
-				$scope.activities = Activity.getList({location:$scope.locationF, limit:100}).$object;
+				$scope.bookmarks = [];
+		        Activity.getList({location:$scope.locationF, limit:100}).then(function(allActivities) {
+		        	allActivities.sort(function(a,b){return b.vote - a.vote});
+		          	$scope.activities = allActivities;
+		          	for (var i = 0; i < allActivities.length; ++i) {
+						if ($('#upBtn' + i).hasClass('btn-success')) {
+							$('#upBtn' + i).removeClass('btn-success');
+							$('#upBtn' + i).addClass('btn-light');
+						}
+						if ($('#downBtn' + i).hasClass('btn-danger')) {
+							$('#downBtn' + i).removeClass('btn-danger');
+							$('#downBtn' + i).addClass('btn-light');
+						}
+
+					}
+					if ($scope.loggedInUser) {
+			        	User.getList({username:$scope.loggedInUser}).then(function(userRes) {
+							var thisUser = userRes[0];
+
+							for (var i = 0; i < allActivities.length; ++i) {
+								var thisActivity = allActivities[i];
+								if (thisUser.likes.includes(allActivities[i].title)) {
+									var bookmarkIndex = i;
+									setTimeout($scope.applyLikes, 100, bookmarkIndex);
+								} else if (thisUser.dislikes.includes(allActivities[i].title)) {
+									var bookmarkIndex = i;
+									setTimeout($scope.applyDislikes, 100, bookmarkIndex);
+								}
+								
+								if (thisActivity.bookmarkUsers.includes($scope.loggedInUser)) {
+									$scope.bookmarks.push(true);
+
+								} else {
+									$scope.bookmarks.push(false);
+								}
+							}
+						});
+			        } else {
+			          	for (var i = 0; i < allActivities.length; ++i) {
+							$scope.bookmarks.push(false);
+						}
+			        }
+				});
 			} else {
 				$('#priceFilterBtn').text($scope.priceF);
-				$scope.activities = Activity.getList({cost:$scope.priceF, location:$scope.locationF, limit:100}).$object;
+				$scope.bookmarks = [];
+		        Activity.getList({cost:$scope.priceF, location:$scope.locationF, limit:100}).then(function(allActivities) {
+		        	allActivities.sort(function(a,b){return b.vote - a.vote});
+		          	$scope.activities = allActivities;
+		          	for (var i = 0; i < allActivities.length; ++i) {
+						if ($('#upBtn' + i).hasClass('btn-success')) {
+							$('#upBtn' + i).removeClass('btn-success');
+							$('#upBtn' + i).addClass('btn-light');
+						}
+						if ($('#downBtn' + i).hasClass('btn-danger')) {
+							$('#downBtn' + i).removeClass('btn-danger');
+							$('#downBtn' + i).addClass('btn-light');
+						}
+
+					}
+					if ($scope.loggedInUser) {
+			        	User.getList({username:$scope.loggedInUser}).then(function(userRes) {
+							var thisUser = userRes[0];
+
+							for (var i = 0; i < allActivities.length; ++i) {
+								var thisActivity = allActivities[i];
+								if (thisUser.likes.includes(allActivities[i].title)) {
+									var bookmarkIndex = i;
+									setTimeout($scope.applyLikes, 100, bookmarkIndex);
+								} else if (thisUser.dislikes.includes(allActivities[i].title)) {
+									var bookmarkIndex = i;
+									setTimeout($scope.applyDislikes, 100, bookmarkIndex);
+								}
+								
+								if (thisActivity.bookmarkUsers.includes($scope.loggedInUser)) {
+									$scope.bookmarks.push(true);
+
+								} else {
+									$scope.bookmarks.push(false);
+								}
+							}
+						});
+			        } else {
+			          	for (var i = 0; i < allActivities.length; ++i) {
+							$scope.bookmarks.push(false);
+						}
+			        }
+				});
 			}
 		}
 	};	
@@ -250,17 +479,23 @@ angular.module('clientApp')
 			if (!alreadyExists) {
 				User.post(newU).then(function() {
 		          $scope.loggedInUser = newU.username;
-		          $scope.activities = Activity.getList({limit:100}).$object;
 
 		          $scope.bookmarks = [];
 				  Activity.getList({limit:100}).then(function(allActivities) {
+				  	allActivities.sort(function(a,b){return b.vote - a.vote});
+		          	$scope.activities = allActivities;
 		          	for (var i = 0; i < allActivities.length; ++i) {
-						if (allActivities[i].bookmarkUsers.includes($scope.loggedInUser)) {
-							$scope.bookmarks.push(true);
-						} else {
-							$scope.bookmarks.push(false);
+						if ($('#upBtn' + i).hasClass('btn-success')) {
+							$('#upBtn' + i).removeClass('btn-success');
+							$('#upBtn' + i).addClass('btn-light');
 						}
-					  }
+						if ($('#downBtn' + i).hasClass('btn-danger')) {
+							$('#downBtn' + i).removeClass('btn-danger');
+							$('#downBtn' + i).addClass('btn-light');
+						}
+
+						$scope.bookmarks.push(false);
+					}
 				  });
 		        });
 			} else {
@@ -290,10 +525,11 @@ angular.module('clientApp')
 		setTimeout(function() {
 			if (alreadyExists && $scope.loginPassword === correctpw) {
 	          $scope.loggedInUser = $scope.loginUsername;
-	          $scope.activities = Activity.getList({limit:100}).$object;
 
 	          $scope.bookmarks = [];
 	          Activity.getList({limit:100}).then(function(allActivities) {
+	          	allActivities.sort(function(a,b){return b.vote - a.vote});
+		        $scope.activities = allActivities;
 	          	for (var i = 0; i < allActivities.length; ++i) {
 					if (allActivities[i].bookmarkUsers.includes($scope.loggedInUser)) {
 						$scope.bookmarks.push(true);
@@ -306,6 +542,24 @@ angular.module('clientApp')
 				alert("Sorry, the login information provided is incorrect. Please try again or register a new user.");
 			}
 
+			User.getList({username:$scope.loggedInUser}).then(function(userRes) {
+				var thisUser = userRes[0];
+
+				Activity.getList({limit:100}).then(function(allActivities) {
+		          	allActivities.sort(function(a,b){return b.vote - a.vote});
+			        $scope.activities = allActivities;
+			        for (var i = 0; i < allActivities.length; ++i) {
+			        	if (thisUser.likes.includes(allActivities[i].title)) {
+							$('#upBtn' + i).removeClass('btn-light');
+							$('#upBtn' + i).addClass('btn-success');
+						} else if (thisUser.dislikes.includes(allActivities[i].title)) {
+							$('#downBtn' + i).removeClass('btn-light');
+							$('#downBtn' + i).addClass('btn-danger');
+						}
+			        }
+				  });
+			});
+
 			$('#login-username').val(undefined);
 			$('#login-password').val(undefined);
 			//$('#new-activity').modal('hide');
@@ -315,11 +569,21 @@ angular.module('clientApp')
 	$scope.logoutUser = function() {
 		$scope.loggedInUser = undefined;
 
-		$scope.activities = Activity.getList({limit:100}).$object;
 		$scope.bookmarks = [];
 
 		Activity.getList({limit:100}).then(function(allActivities) {
+			allActivities.sort(function(a,b){return b.vote - a.vote});
+		    $scope.activities = allActivities;
 			for (var i = 0; i < allActivities.length; ++i) {
+				if ($('#upBtn' + i).hasClass('btn-success')) {
+					$('#upBtn' + i).removeClass('btn-success');
+					$('#upBtn' + i).addClass('btn-light');
+				}
+				if ($('#downBtn' + i).hasClass('btn-danger')) {
+					$('#downBtn' + i).removeClass('btn-danger');
+					$('#downBtn' + i).addClass('btn-light');
+				}
+
 				$scope.bookmarks.push(false);
 			}
 		});
