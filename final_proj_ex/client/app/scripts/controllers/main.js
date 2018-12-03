@@ -37,19 +37,41 @@ angular.module('clientApp')
 			$scope.bookmarks = [];
 	    	Activity.getList({limit:100}).then(function(allActivities) {
 	    		allActivities.sort(function(a,b){return b.vote - a.vote});
-				for (var i = 0; i < allActivities.length; ++i) {
-					var thisActivity = allActivities[i];
-					if (thisActivity.title.includes($("#searchBar").val())) {
-						$scope.activities.push(thisActivity);
-						if ($scope.loggedInUser) {
-							if (thisActivity.bookmarkUsers.includes($scope.loggedInUser)) {
-								$scope.bookmarks.push(true);
-							} else {
-								$scope.bookmarks.push(false);
+
+	    		if ($scope.loggedInUser) {
+	    			User.getList({username:$scope.loggedInUser}).then(function(userRes) {
+	    				var thisUser = userRes[0];
+		    			for (var i = 0; i < allActivities.length; ++i) {
+							var thisActivity = allActivities[i];
+							if (thisActivity.title.includes($("#searchBar").val())) {
+								$scope.activities.push(thisActivity);
+
+								if (thisActivity.bookmarkUsers.includes($scope.loggedInUser)) {
+									$scope.bookmarks.push(true);
+								} else {
+									$scope.bookmarks.push(false);
+								}
+
+								if (thisUser.likes.includes(thisActivity.title)) {
+									var bookmarkIndex = $scope.activities.length-1;
+									setTimeout($scope.applyLikes, 100, bookmarkIndex);
+								} else if (thisUser.dislikes.includes(thisActivity.title)) {
+									var bookmarkIndex = $scope.activities.length-1;
+									setTimeout($scope.applyDislikes, 100, bookmarkIndex);
+								}
+								
 							}
 						}
+					});
+	    		} else {
+	    			for (var i = 0; i < allActivities.length; ++i) {
+						var thisActivity = allActivities[i];
+						if (thisActivity.title.includes($("#searchBar").val())) {
+							$scope.activities.push(thisActivity);
+							$scope.bookmarks.push(false);
+						}
 					}
-				}
+	    		}
 			});
 	    }
 	});
